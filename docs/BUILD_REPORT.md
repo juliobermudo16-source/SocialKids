@@ -177,8 +177,40 @@ Son PDF reales (formato 1.4, texto seleccionable), generados a partir de los `.m
 SDK 35, y publica APK, fuentes, informes de pruebas y lint, y PDF como artefactos descargables. Al
 empujar una etiqueta `v*` crea además una release de GitHub con el APK adjunto.
 
-El workflow no se ha ejecutado todavía en el momento de escribir este informe: se ejecutará
-automáticamente con el primer push al repositorio.
+### Ejecución verificada en GitHub Actions
+
+El workflow se ejecutó realmente tras el primer push:
+
+| Dato | Valor |
+|---|---|
+| Repositorio | `juliobermudo16-source/SocialKids` |
+| Ejecución | `32814352253` |
+| Resultado | **success** |
+| Duración | 8 m 30 s |
+| Runner | `ubuntu-latest`, JDK 17 Temurin, SDK 35 |
+
+Resumen que publicó el propio workflow:
+
+- Pruebas unitarias: **93 ejecutadas, 0 fallidas, 0 con error, 0 omitidas**
+- Lint: **0 errores**
+- APK: `SocialKids-v1.0.0.apk`, 17,0 MB
+
+SHA-256 de los APK generados en CI (distintos a los locales porque el APK de depuración se firma
+con la clave de depuración del runner y las marcas de tiempo cambian):
+
+| Archivo | SHA-256 |
+|---|---|
+| `SocialKids-v1.0.0.apk` | `2563ee898d83024d2a17c7529d0c5e57b35ad0cb2f1bfeb1a62f5a8c2ec13832` |
+| `SocialKids-v1.0.0-release-unsigned.apk` | `e5b20a63c81bb00e3459e6a549c35bdef929fe00a9e7e70ba1fd16209967d90d` |
+
+Artefactos publicados y descargables desde la pestaña Actions:
+
+| Artefacto | Tamaño |
+|---|---:|
+| `SocialKids-APK` | 28 914 314 B |
+| `SocialKids-fuente` | 320 582 B |
+| `SocialKids-informes` | 60 807 B |
+| `SocialKids-documentacion` | 61 913 B |
 
 ---
 

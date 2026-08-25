@@ -91,6 +91,9 @@ push y genera el APK automáticamente. Sube como artefactos:
 Si se empuja una etiqueta `v*` (por ejemplo `git tag v1.0.0 && git push --tags`), además publica
 una **release** de GitHub con el APK adjunto.
 
+**Verificado:** la ejecución `32814352253` terminó en `success` en 8 m 30 s, con 93 pruebas en
+verde, lint sin errores y el APK de 17,0 MB publicado como artefacto.
+
 ---
 
 ## Estructura
