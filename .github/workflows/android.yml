@@ -1,0 +1,121 @@
+name: Construir SocialKids
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  construir:
+    name: Tests, lint y APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Preparar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar el SDK de Android
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
+
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Dar permisos al wrapper
+        run: chmod +x ./gradlew
+
+      - name: Limpiar
+        run: ./gradlew clean --no-daemon
+
+      - name: Pruebas unitarias
+        run: ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Analisis lint
+        run: ./gradlew lintDebug --no-daemon
+
+      - name: Compilar APK de depuracion
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Compilar APK sin firmar de release
+        run: ./gradlew assembleRelease --no-daemon
+        continue-on-error: true
+
+      - name: Preparar entregables
+        id: entregables
+        run: |
+          mkdir -p deliverables
+          APK=$(find app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          cp "$APK" deliverables/SocialKids-v1.0.0.apk
+          REL=$(find app/build/outputs/apk/release -name "*.apk" 2>/dev/null | head -n 1 || true)
+          if [ -n "$REL" ]; then cp "$REL" deliverables/SocialKids-v1.0.0-release-unsigned.apk; fi
+          cd deliverables
+          sha256sum *.apk > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          echo "sha=$(sha256sum SocialKids-v1.0.0.apk | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Empaquetar codigo fuente
+        run: |
+          zip -r deliverables/SocialKids-v1.0.0-source.zip . \
+            -x "*.git/*" "*/build/*" "build/*" ".gradle/*" "*/.gradle/*" "deliverables/*" > /dev/null
+          ls -lh deliverables
+
+      - name: Resumen de la compilacion
+        if: always()
+        run: python3 tools/resumen_ci.py
+
+      - name: Publicar el APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SocialKids-APK
+          path: |
+            deliverables/*.apk
+            deliverables/SHA256SUMS.txt
+          if-no-files-found: error
+
+      - name: Publicar el codigo fuente
+        uses: actions/upload-artifact@v4
+        with:
+          name: SocialKids-fuente
+          path: deliverables/SocialKids-v1.0.0-source.zip
+
+      - name: Publicar informes de pruebas y lint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: SocialKids-informes
+          path: |
+            app/build/reports/tests/testDebugUnitTest/**
+            app/build/test-results/testDebugUnitTest/**
+            app/build/reports/lint-results-debug.html
+            app/build/reports/lint-results-debug.xml
+
+      - name: Publicar documentacion en PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: SocialKids-documentacion
+          path: docs/pdf/*.pdf
+        continue-on-error: true
+
+      - name: Crear release con el APK
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            deliverables/*.apk
+            deliverables/SHA256SUMS.txt
+            deliverables/SocialKids-v1.0.0-source.zip
+            docs/pdf/*.pdf
+          generate_release_notes: true

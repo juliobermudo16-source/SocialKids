@@ -1,0 +1,17 @@
+# Compilacion
+build/
+app/build/
+.gradle/
+.kotlin/
+local.properties
+*.aab
+*.iml
+.idea/
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# APK: solo se versionan los entregables oficiales
+*.apk
+!deliverables/*.apk

@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Chispa principal de SocialKids -->
+    <path
+        android:fillColor="#FFFFC24B"
+        android:pathData="M54,26 C57.5,45 64,51.5 83,55 C64,58.5 57.5,65 54,84 C50.5,65 44,58.5 25,55 C44,51.5 50.5,45 54,26 Z" />
+    <!-- Chispa pequenia -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M76,30 C77.2,35 79,36.8 84,38 C79,39.2 77.2,41 76,46 C74.8,41 73,39.2 68,38 C73,36.8 74.8,35 76,30 Z" />
+    <!-- Ola de la isla -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillAlpha="0.85"
+        android:pathData="M22,74 C30,68 38,80 46,74 C54,68 62,80 70,74 C78,68 82,72 86,74 L86,80 C82,78 78,74 70,80 C62,86 54,74 46,80 C38,86 30,74 22,80 Z" />
+</vector>

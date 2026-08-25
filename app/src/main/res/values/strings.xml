@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SocialKids</string>
+    <string name="app_lema">Isla Conecta</string>
+    <string name="desc_avatar">Avatar del explorador</string>
+    <string name="desc_nima">Nima, la guia de la isla</string>
+    <string name="desc_mapa">Mapa de la Isla Conecta</string>
+</resources>
